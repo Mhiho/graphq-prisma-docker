@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    volumes:
+      - ./src:/mio/src
+      - ./nodemon.json:/mio/nodemon.json
+    container_name: mio
+    ports:
+      - '4000:4000'
+    command: npm run dev
+    external_links:
+        - postgres
+  postgres:
+    container_name: postgres
+    image: postgres:13.3
+    environment: 
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${DATABASE}
+    ports:
+      - "5432:5432"
