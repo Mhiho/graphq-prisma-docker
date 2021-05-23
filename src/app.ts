@@ -1,32 +1,16 @@
-import { GraphQLServer } from 'graphql-yoga';
-// import { PrismaClient } from '@prisma/client';
+import { ApolloServer } from 'apollo-server';
+import { resolvers } from "./resolvers/user.resolver";
+import { getUserId } from './utils';
+import { importSchema } from 'graphql-import';
 
-// const prisma = new PrismaClient();
+const typeDefs = importSchema('./src/schemas/schema.graphql');
 
-
-const typeDefs = `
-type Query {
-    hello: String!
-    dupa: String!
-}
-`
-
-const resolvers = {
-    Query: {
-        hello() {
-            return `This is my query`
-        },
-        dupa() {
-            return `PindA`
-        },
-    },
-}
-
-const server = new GraphQLServer({
-    typeDefs,
-    resolvers,
+const server = new ApolloServer({
+  typeDefs,
+  resolvers
 });
+server.listen({ port: 4000 })
+.then(({url})=> {
+  console.log(`server is up at ${url}`)
+})
 
-server.start(()=> [
-    console.log('Server up')
-])
